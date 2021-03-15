@@ -6,10 +6,9 @@ import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class NoteController {
@@ -22,7 +21,7 @@ public class NoteController {
     }
 
     @PostMapping("/notes")
-    public String addNote(Authentication authentication, RedirectAttributes redirectAttributes, @ModelAttribute Note note) {
+    public String addNote(Authentication authentication, @ModelAttribute Note note, Model model) {
         User user = this.userService.getUser(authentication.getName());
         note.setUserId(user.getUserId());
         if (note.getNoteId() == null)
@@ -30,7 +29,7 @@ public class NoteController {
         else
             this.noteService.updateNote(note);
 
-        redirectAttributes.addAttribute("tab", "notes");
-        return "redirect:/home";
+        model.addAttribute("success", true);
+        return "result";
     }
 }

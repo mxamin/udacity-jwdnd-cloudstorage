@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -26,14 +27,21 @@ public class FileController {
     }
 
     @PostMapping("/files")
-    public String addFile(Authentication authentication, RedirectAttributes redirectAttributes, @RequestParam("fileUpload") MultipartFile fileUpload){
+    public String addFile(Authentication authentication, @RequestParam("fileUpload") MultipartFile fileUpload, Model model){
         User user = this.userService.getUser(authentication.getName());
         Integer fileId = this.fileService.addFile(user.getUserId(), fileUpload);
-        if (fileId == -1)
-            redirectAttributes.addFlashAttribute("errorMessage", "File upload failed");
+        switch (fileId) {
+            case -1:
+                model.addAttribute("error", true);
+                break;
+            case -2:
+                model.addAttribute("errorMessage", "Duplicate file.");
+                break;
+            default:
+                model.addAttribute("success", true);
+        }
 
-        redirectAttributes.addAttribute("tab", "files");
-        return "redirect:/home";
+        return "result";
     }
 
     @GetMapping("/files/{fileId}")

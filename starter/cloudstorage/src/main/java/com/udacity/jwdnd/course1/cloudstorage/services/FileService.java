@@ -39,7 +39,7 @@ public class FileService {
 
         if (this.isDuplicateFileName(userId, fileName))
             // Duplicate file
-            return -1;
+            return -2;
 
         byte[] fileData;
         try{

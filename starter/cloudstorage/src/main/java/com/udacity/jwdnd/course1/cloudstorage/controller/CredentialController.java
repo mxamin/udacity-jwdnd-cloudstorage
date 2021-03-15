@@ -7,9 +7,9 @@ import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class CredentialController {
@@ -24,7 +24,7 @@ public class CredentialController {
     }
 
     @PostMapping("/credentials")
-    public String addCredential(Authentication authentication, RedirectAttributes redirectAttributes, @ModelAttribute Credential credential) {
+    public String addCredential(Authentication authentication, @ModelAttribute Credential credential, Model model) {
         User user = this.userService.getUser(authentication.getName());
         credential.setUserId(user.getUserId());
         credential.setKey(this.encryptionService.getRandomKey());
@@ -35,7 +35,7 @@ public class CredentialController {
         else
             this.credentialService.updateCredential(credential);
 
-        redirectAttributes.addAttribute("tab", "credentials");
-        return "redirect:/home";
+        model.addAttribute("success", true);
+        return "result";
     }
 }

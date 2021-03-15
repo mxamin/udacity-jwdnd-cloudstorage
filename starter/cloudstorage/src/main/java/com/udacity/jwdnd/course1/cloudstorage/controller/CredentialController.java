@@ -9,10 +9,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
-@RequestMapping("/credential")
+@RequestMapping("/credentials")
 public class CredentialController {
     private final UserService userService;
     private final CredentialService credentialService;
@@ -23,10 +24,12 @@ public class CredentialController {
     }
 
     @PostMapping
-    public RedirectView addCredential(Authentication authentication, @ModelAttribute Credential credential) {
+    public String addCredential(Authentication authentication, RedirectAttributes redirectAttributes, @ModelAttribute Credential credential) {
         User user = this.userService.getUser(authentication.getName());
         credential.setUserId(user.getUserId());
         this.credentialService.addCredential(credential);
-        return new RedirectView("/home?tab=credentials");
+
+        redirectAttributes.addAttribute("tab", "credentials");
+        return "redirect:/home";
     }
 }

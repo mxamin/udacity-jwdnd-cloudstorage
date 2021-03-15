@@ -9,10 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/note")
+@RequestMapping("/notes")
 public class NoteController {
     private final UserService userService;
     private final NoteService noteService;
@@ -23,10 +23,12 @@ public class NoteController {
     }
 
     @PostMapping
-    public RedirectView addNote(Authentication authentication, @ModelAttribute Note note) {
+    public String addNote(Authentication authentication, RedirectAttributes redirectAttributes, @ModelAttribute Note note) {
         User user = this.userService.getUser(authentication.getName());
         note.setUserId(user.getUserId());
         this.noteService.addNote(note);
-        return new RedirectView("/home?tab=notes");
+
+        redirectAttributes.addAttribute("tab", "notes");
+        return "redirect:/home";
     }
 }

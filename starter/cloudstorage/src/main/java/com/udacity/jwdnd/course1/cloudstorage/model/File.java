@@ -1,17 +1,21 @@
 package com.udacity.jwdnd.course1.cloudstorage.model;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import java.sql.Blob;
+
 public class File {
     private Integer fileId;
-    private String filename;
-    private String contentType;
-    private Integer fileSize;
-    private byte[] fileData;
     private Integer userId;
+    private String fileName;
+    private String contentType;
+    private String fileSize;
+    private byte[] fileData;
 
-    public File(Integer fileId, Integer userId, String filename, String contentType, Integer fileSize, byte[] fileData) {
+    public File(Integer fileId, Integer userId, String fileName, String contentType, String fileSize, byte[] fileData) {
         this.fileId = fileId;
         this.userId = userId;
-        this.filename = filename;
+        this.fileName = fileName;
         this.contentType = contentType;
         this.fileSize = fileSize;
         this.fileData = fileData;
@@ -25,12 +29,20 @@ public class File {
         this.fileId = fileId;
     }
 
-    public String getFilename() {
-        return filename;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public String getContentType() {
@@ -41,11 +53,11 @@ public class File {
         this.contentType = contentType;
     }
 
-    public Integer getFileSize() {
+    public String getFileSize() {
         return fileSize;
     }
 
-    public void setFileSize(Integer fileSize) {
+    public void setFileSize(String fileSize) {
         this.fileSize = fileSize;
     }
 
@@ -55,13 +67,5 @@ public class File {
 
     public void setFileData(byte[] fileData) {
         this.fileData = fileData;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
     }
 }

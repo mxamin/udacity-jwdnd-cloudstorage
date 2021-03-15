@@ -10,17 +10,10 @@
     </head>
     <body class="p-3 mb-2 bg-light text-black">
         <div class="container">
-            <div class="row">
-                <div class="col-sm-6">
-                    <div th:if="${errorMessage}" class="alert alert-danger">
-                        <span th:text="${errorMessage}">Example Error Message</span>
-                    </div>
-                </div>
-                <div class="col-sm-6 logoutDiv">
-                    <form th:action="@{/logout}" action="#" method="POST">
-                        <button type="submit" class="btn btn-secondary float-right">Logout</button>
-                    </form>
-                </div>
+            <div class="logoutDiv">
+                <form th:action="@{/logout}" action="#" method="POST">
+                    <button type="submit" class="btn btn-secondary float-right">Logout</button>
+                </form>
             </div>
             <div id="contentDiv" style="clear: right;">
                 <nav style="clear: right;">
@@ -84,7 +77,7 @@
                                 <tbody>
                                     <tr th:each="note: ${notes}">
                                         <td>
-                                            <button type="button" class="btn btn-success">Edit</button>
+                                            <button type="button" class="btn btn-success" th:onclick="showNoteModal([[${note.noteId}]], [[${note.noteTitle}]], [[${note.noteDescription}]])">Edit</button>
                                             <a class="btn btn-danger">Delete</a>
                                         </td>
                                         <td th:text="${note.noteTitle}" scope="row">Example Note Title</td>
@@ -143,7 +136,7 @@
                                 <tbody>
                                 <tr th:each="credential: ${credentials}">
                                     <td>
-                                        <button type="button" class="btn btn-success">Edit</button>
+                                        <button type="button" class="btn btn-success" th:onclick="showCredentialModal([[${credential.credentialId}]], [[${credential.url}]], [[${credential.username}]], [[${credential.plainPassword}]])">Edit</button>
                                         <a class="btn btn-danger">Delete</a>
                                     </td>
                                     <td th:text="${credential.url}" scope="row">Example Credential URL</td>

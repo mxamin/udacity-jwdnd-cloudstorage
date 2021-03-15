@@ -21,4 +21,8 @@ public class NoteService {
     public Integer addNote(Note note) {
         return this.noteMapper.addNote(note);
     }
+
+    public void updateNote(Note note) {
+        this.noteMapper.updateNote(note);
+    }
 }

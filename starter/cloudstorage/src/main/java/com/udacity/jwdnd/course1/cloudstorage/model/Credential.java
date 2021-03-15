@@ -1,5 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.model;
 
+import java.util.Base64;
+
 public class Credential {
     private Integer credentialId;
     private Integer userId;
@@ -7,6 +9,7 @@ public class Credential {
     private String username;
     private String key;
     private String password;
+    private String plainPassword;
 
     public Credential(Integer credentialId, Integer userId, String url, String username, String key, String password) {
         this.credentialId = credentialId;
@@ -63,5 +66,13 @@ public class Credential {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPlainPassword() {
+        return plainPassword;
+    }
+
+    public void setPlainPassword(String plainPassword) {
+        this.plainPassword = plainPassword;
     }
 }

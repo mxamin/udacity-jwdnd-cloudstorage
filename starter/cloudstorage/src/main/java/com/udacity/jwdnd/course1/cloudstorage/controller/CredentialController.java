@@ -3,31 +3,37 @@ package com.udacity.jwdnd.course1.cloudstorage.controller;
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
+import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
-@RequestMapping("/credentials")
 public class CredentialController {
+    private final EncryptionService encryptionService;
     private final UserService userService;
     private final CredentialService credentialService;
 
-    public CredentialController(UserService userService, CredentialService credentialService) {
+    public CredentialController(EncryptionService encryptionService, UserService userService, CredentialService credentialService) {
+        this.encryptionService = encryptionService;
         this.userService = userService;
         this.credentialService = credentialService;
     }
 
-    @PostMapping
+    @PostMapping("/credentials")
     public String addCredential(Authentication authentication, RedirectAttributes redirectAttributes, @ModelAttribute Credential credential) {
         User user = this.userService.getUser(authentication.getName());
         credential.setUserId(user.getUserId());
-        this.credentialService.addCredential(credential);
+        credential.setKey(this.encryptionService.getRandomKey());
+        credential.setPassword(this.encryptionService.encryptValue(credential.getPassword(), credential.getKey()));
+
+        if (credential.getCredentialId() == null)
+            this.credentialService.addCredential(credential);
+        else
+            this.credentialService.updateCredential(credential);
 
         redirectAttributes.addAttribute("tab", "credentials");
         return "redirect:/home";

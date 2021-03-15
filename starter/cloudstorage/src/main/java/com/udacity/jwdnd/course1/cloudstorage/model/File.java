@@ -1,9 +1,5 @@
 package com.udacity.jwdnd.course1.cloudstorage.model;
 
-import org.springframework.web.multipart.MultipartFile;
-
-import java.sql.Blob;
-
 public class File {
     private Integer fileId;
     private Integer userId;

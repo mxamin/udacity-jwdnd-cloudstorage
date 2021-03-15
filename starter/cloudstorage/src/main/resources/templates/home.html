@@ -52,7 +52,7 @@
                                 <tr th:each="file: ${files}">
                                     <td>
                                         <a th:href="@{'/files/' + ${file.fileId}}" target="_blank" class="btn btn-success">View</a>
-                                        <a  class="btn btn-danger">Delete</a>
+                                        <a th:href="@{'/files/delete/' + ${file.fileId}}" class="btn btn-danger">Delete</a>
                                     </td>
                                     <th th:text="${file.fileName}" scope="row">ExampleFile.txt</th>
                                 </tr>
@@ -78,7 +78,7 @@
                                     <tr th:each="note: ${notes}">
                                         <td>
                                             <button type="button" class="btn btn-success" th:onclick="showNoteModal([[${note.noteId}]], [[${note.noteTitle}]], [[${note.noteDescription}]])">Edit</button>
-                                            <a class="btn btn-danger">Delete</a>
+                                            <a th:href="@{'/notes/delete/' + ${note.noteId}}" class="btn btn-danger">Delete</a>
                                         </td>
                                         <td th:text="${note.noteTitle}" scope="row">Example Note Title</td>
                                         <td th:text="${note.noteDescription}">Example Note Description </td>
@@ -137,7 +137,7 @@
                                 <tr th:each="credential: ${credentials}">
                                     <td>
                                         <button type="button" class="btn btn-success" th:onclick="showCredentialModal([[${credential.credentialId}]], [[${credential.url}]], [[${credential.username}]], [[${credential.plainPassword}]])">Edit</button>
-                                        <a class="btn btn-danger">Delete</a>
+                                        <a th:href="@{'/credentials/delete/' + ${credential.credentialId}}" class="btn btn-danger">Delete</a>
                                     </td>
                                     <td th:text="${credential.url}" scope="row">Example Credential URL</td>
                                     <td th:text="${credential.username}">Example Credential Username</td>

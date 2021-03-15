@@ -20,8 +20,8 @@ public class FileService {
         return this.fileMapper.getFiles(userId);
     }
 
-    public File getFile(Integer userId, Integer fileId) {
-        return this.fileMapper.getFile(userId, fileId);
+    public File getFile(Integer fileId, Integer userId) {
+        return this.fileMapper.getFile(fileId, userId);
     }
 
     public boolean isDuplicateFileName(Integer userId, String fileName) {
@@ -33,7 +33,7 @@ public class FileService {
         Long fileSize = fileUpload.getSize();
         String fileName = fileUpload.getOriginalFilename();
 
-        if (fileSize == 0 && fileName == "")
+        if (fileSize == 0 && fileName.equals(""))
             // Empty file
             return -1;
 
@@ -50,5 +50,9 @@ public class FileService {
 
         File file = new File(null, userId, fileName, fileUpload.getContentType(), Long.toString(fileSize), fileData);
         return this.fileMapper.addFile(file);
+    }
+
+    public void deleteFile(Integer fileId, Integer userId) {
+        this.fileMapper.deleteFile(fileId, userId);
     }
 }

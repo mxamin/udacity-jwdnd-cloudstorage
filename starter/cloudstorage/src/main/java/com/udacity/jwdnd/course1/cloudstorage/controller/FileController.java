@@ -5,7 +5,6 @@ import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class FileController {
@@ -48,12 +46,21 @@ public class FileController {
     @ResponseBody
     public ResponseEntity<ByteArrayResource> getFile(Authentication authentication, @PathVariable Integer fileId) {
         User user = this.userService.getUser(authentication.getName());
-        File file = this.fileService.getFile(user.getUserId(), fileId);
+        File file = this.fileService.getFile(fileId, user.getUserId());
         ByteArrayResource resource = new ByteArrayResource(file.getFileData());
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getFileName())
                 .contentType(MediaType.parseMediaType(file.getContentType()))
                 .contentLength(Long.parseLong(file.getFileSize()))
                 .body(resource);
+    }
+
+    @GetMapping("/files/delete/{fileId}")
+    public String deleteFile(Authentication authentication, @PathVariable Integer fileId, Model model) {
+        User user = this.userService.getUser(authentication.getName());
+        this.fileService.deleteFile(fileId, user.getUserId());
+
+        model.addAttribute("success", true);
+        return "result";
     }
 }

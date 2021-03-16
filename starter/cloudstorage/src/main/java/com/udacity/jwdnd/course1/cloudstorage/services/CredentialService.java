@@ -18,6 +18,8 @@ public class CredentialService {
         return this.credentialMapper.getCredentials(userId);
     }
 
+    public Credential getCredential(Integer credentialId) { return this.credentialMapper.getCredential(credentialId); }
+
     public Integer addCredential(Credential credential) {
         return this.credentialMapper.addCredential(credential);
     }

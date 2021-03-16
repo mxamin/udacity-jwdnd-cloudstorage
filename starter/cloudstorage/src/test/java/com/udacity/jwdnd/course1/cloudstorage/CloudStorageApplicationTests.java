@@ -1,5 +1,8 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
+import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
+import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
+import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
@@ -7,14 +10,23 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+
+import javax.validation.constraints.AssertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CloudStorageApplicationTests {
 
 	@LocalServerPort
 	private int port;
+
+	@Autowired
+	private EncryptionService encryptionService;
+
+	@Autowired
+	private CredentialService credentialService;
 
 	private String homeUrl;
 	private String loginUrl;
@@ -175,8 +187,16 @@ class CloudStorageApplicationTests {
 		Assertions.assertEquals(url, driver.findElement(By.xpath("//*[@id=\"credentialTable\"]/tbody/tr/td[2]")).getText());
 		waitDriver.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//*[@id=\"credentialTable\"]/tbody/tr/td[3]"))));
 		Assertions.assertEquals(username, driver.findElement(By.xpath("//*[@id=\"credentialTable\"]/tbody/tr/td[3]")).getText());
+
+		// Check encrypted password
 		waitDriver.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//*[@id=\"credentialTable\"]/tbody/tr/td[4]"))));
-		Assertions.assertNotEquals(password, driver.findElement(By.xpath("//*[@id=\"credentialTable\"]/tbody/tr/td[4]")).getText()); // Password should not match
+		String encryptedPassword = driver.findElement(By.xpath("//*[@id=\"credentialTable\"]/tbody/tr/td[4]")).getText();
+		waitDriver.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"credentialTable\"]/tbody/tr/td[1]/a"))));
+		String href = driver.findElement(By.xpath("//*[@id=\"credentialTable\"]/tbody/tr/td[1]/a")).getAttribute("href");
+		int pos = href.lastIndexOf("/");
+		Integer credentialId = Integer.parseInt(href.substring(pos + 1));
+		Credential credential = credentialService.getCredential(credentialId);
+		Assertions.assertEquals(password, encryptionService.decryptValue(encryptedPassword, credential.getKey()));
 
 		// Update credential
 		String newUrl = "test new url";

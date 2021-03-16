@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
@@ -28,16 +27,10 @@ public class HomeController {
         this.fileService = fileService;
         this.noteService = noteService;
         this.credentialService = credentialService;
-
-        // TODO: remove it when you're done testing
-        this.prepareData();
     }
 
     @GetMapping
-    public String homeView(Authentication authentication, HttpServletRequest request, Model model) {
-        String tab = request.getParameter("tab");
-        if (tab == null)
-            tab = "files";  // Default tab
+    public String homeView(Authentication authentication, Model model) {
 
         User user = this.userService.getUser(authentication.getName());
 
@@ -49,12 +42,6 @@ public class HomeController {
         model.addAttribute("files", this.fileService.getFiles(user.getUserId()));
         model.addAttribute("notes", this.noteService.getNotes(user.getUserId()));
         model.addAttribute("credentials", credentials);
-        model.addAttribute("tab", tab);
         return "home";
-    }
-
-    private void prepareData() {
-        User user = new User(null, "mxamin", null, "test1234", "Amin", "Solhizadeh");
-        this.userService.addUser(user);
     }
 }

@@ -22,6 +22,7 @@ public class NoteController {
         this.noteService = noteService;
     }
 
+    // Add and update notes
     @PostMapping("/notes")
     public String addNote(Authentication authentication, @ModelAttribute Note note, Model model) {
         User user = this.userService.getUser(authentication.getName());
@@ -35,6 +36,7 @@ public class NoteController {
         return "result";
     }
 
+    // Delete note
     @GetMapping("/notes/delete/{noteId}")
     public String deleteNote(Authentication authentication, @PathVariable Integer noteId, Model model) {
         User user = this.userService.getUser(authentication.getName());

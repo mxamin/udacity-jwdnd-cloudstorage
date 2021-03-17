@@ -25,6 +25,7 @@ public class CredentialController {
         this.credentialService = credentialService;
     }
 
+    // Add and update credentials
     @PostMapping("/credentials")
     public String addCredential(Authentication authentication, @ModelAttribute Credential credential, Model model) {
         User user = this.userService.getUser(authentication.getName());
@@ -41,6 +42,7 @@ public class CredentialController {
         return "result";
     }
 
+    // Delete credential
     @GetMapping("/credentials/delete/{credentialId}")
     public String deleteNote(Authentication authentication, @PathVariable Integer credentialId, Model model) {
         User user = this.userService.getUser(authentication.getName());

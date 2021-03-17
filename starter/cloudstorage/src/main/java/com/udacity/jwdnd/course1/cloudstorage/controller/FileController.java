@@ -24,6 +24,7 @@ public class FileController {
         this.fileService = fileService;
     }
 
+    // Create file
     @PostMapping("/files")
     public String addFile(Authentication authentication, @RequestParam("fileUpload") MultipartFile fileUpload, Model model){
         User user = this.userService.getUser(authentication.getName());
@@ -42,6 +43,7 @@ public class FileController {
         return "result";
     }
 
+    // Download file
     @GetMapping("/files/{fileId}")
     @ResponseBody
     public ResponseEntity<ByteArrayResource> getFile(Authentication authentication, @PathVariable Integer fileId) {
@@ -55,6 +57,7 @@ public class FileController {
                 .body(resource);
     }
 
+    // Delete file
     @GetMapping("/files/delete/{fileId}")
     public String deleteFile(Authentication authentication, @PathVariable Integer fileId, Model model) {
         User user = this.userService.getUser(authentication.getName());

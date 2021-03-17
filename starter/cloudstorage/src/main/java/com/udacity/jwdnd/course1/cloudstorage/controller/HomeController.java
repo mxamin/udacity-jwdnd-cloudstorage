@@ -29,6 +29,7 @@ public class HomeController {
         this.credentialService = credentialService;
     }
 
+    // Get all the files, notes and credentials
     @GetMapping
     public String homeView(Authentication authentication, Model model) {
 
